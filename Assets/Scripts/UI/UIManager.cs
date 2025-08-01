@@ -11,20 +11,18 @@ namespace UI
         [SerializeField] private SettingsPopup _settingsPopup;
         [SerializeField] private GameplayScreen _gameplay;
         [SerializeField] private ResultPopup _resultPopup;
-        
+
         private BaseWindow _currentWindow;
-        private MazeDataService _mazeDataService;
 
         public MainMenuScreen MainMenu => _mainMenu;
         public SettingsPopup SettingsPopup => _settingsPopup;
         public GameplayScreen Gameplay => _gameplay;
         public ResultPopup ResultPopup => _resultPopup;
-        
+
         public event Action OnStartGameplay;
 
-        public void Initialzie(MazeDataService mazeDataService)
+        public void Initialize(MazeDataService mazeDataService)
         {
-            _mazeDataService = mazeDataService;
             _settingsPopup.Initialize(mazeDataService);
             ShowWindow(_mainMenu);
             _mainMenu.OnPlay += PlayClicked;
@@ -37,30 +35,28 @@ namespace UI
 
         private void PlayClicked()
         {
-            ShowWindow(_gameplay);
             OnStartGameplay?.Invoke();
+            ShowWindow(_gameplay);
         }
 
         public void ShowWindow(WindowType type)
         {
-            switch (type)
+            BaseWindow window = type switch
             {
-                case WindowType.MainMenu:
-                    ShowWindow(_mainMenu);
-                    break;
-                case WindowType.Gameplay:
-                    ShowWindow(_gameplay);
-                    break;
+                WindowType.MainMenu => _mainMenu,
+                WindowType.Gameplay => _gameplay,
+                _ => null
+            };
+
+            if (window != null)
+            {
+                ShowWindow(window);
             }
         }
 
         private void ShowWindow(BaseWindow window)
         {
-            if (_currentWindow != null)
-            {
-                _currentWindow.Hide();
-            }
-
+            _currentWindow?.Hide();
             _currentWindow = window;
             _currentWindow.Show();
         }

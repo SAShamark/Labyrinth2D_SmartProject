@@ -1,7 +1,6 @@
-using Gameplay.Environments;
 using Services.Storage;
 
-namespace UI.Variables
+namespace Gameplay.Environments
 {
     public class MazeDataService
     {

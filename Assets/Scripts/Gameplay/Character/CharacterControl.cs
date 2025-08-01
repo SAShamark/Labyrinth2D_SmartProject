@@ -19,9 +19,9 @@ namespace Gameplay.Character
         [SerializeField] private ParticleSystem _winParticle;
 
         [SerializeField] private SwipeHandler _swipeHandler;
+        
         private ClickHandler _clickHandler;
         private WasdHandler _wasdHandler;
-
         private Camera _mainCamera;
 
         private CellType[,] _maze;
@@ -36,31 +36,13 @@ namespace Gameplay.Character
 
         public event Action OnMazePassed;
 
-        public void Initialize(CellType[,] maze, int mazeWidth, int mazeHeight, Tilemap groundTilemap)
-        {
-            _maze = maze;
-            _mazeWidth = mazeWidth;
-            _mazeHeight = mazeHeight;
-            _groundTilemap = groundTilemap;
-            _inputEnabled = true;
-
-            _currentMazePosition = WorldToMazePosition(transform.position);
-            _targetWorldPosition = transform.position;
-
-            _swipeHandler.OnSwiped += TryMove;
-            _clickHandler.OnClicked += TryMoveByClick;
-            _wasdHandler.OnPressed += TryMove;
-        }
-
         private void Start()
         {
             _mainCamera = Camera.main;
-
             _clickHandler = new ClickHandler(_mainCamera);
             _wasdHandler = new WasdHandler();
         }
-
-
+        
         private void Update()
         {
             if (!_inputEnabled) return;
@@ -79,14 +61,28 @@ namespace Gameplay.Character
 
         private void OnDestroy()
         {
-            _swipeHandler.OnSwiped -= TryMove;
-            _clickHandler.OnClicked -= TryMoveByClick;
-            _wasdHandler.OnPressed -= TryMove;
+            UnsubscribeInput();
 
             if (_mazePassedCoroutine != null)
             {
                 StopCoroutine(_mazePassedCoroutine);
             }
+        }
+
+        public void Initialize(CellType[,] maze, int mazeWidth, int mazeHeight, Tilemap groundTilemap)
+        {
+            _maze = maze;
+            _mazeWidth = mazeWidth;
+            _mazeHeight = mazeHeight;
+            _groundTilemap = groundTilemap;
+
+            _currentMazePosition = WorldToMazePosition(transform.position);
+            _targetWorldPosition = transform.position;
+            _inputEnabled = true;
+
+            _swipeHandler.OnSwiped += TryMove;
+            _clickHandler.OnClicked += TryMoveByClick;
+            _wasdHandler.OnPressed += TryMove;
         }
 
         private void TryMove(Vector2Int direction)
@@ -172,7 +168,6 @@ namespace Gameplay.Character
 
             if (_maze[_currentMazePosition.x, _currentMazePosition.y] == CellType.Exit)
             {
-                Debug.Log($"Character landed on Exit at position: {_currentMazePosition}");
                 _inputEnabled = false;
                 _mazePassedCoroutine = StartCoroutine(MazePassed());
             }
@@ -180,14 +175,24 @@ namespace Gameplay.Character
 
         private IEnumerator MazePassed()
         {
-            _swipeHandler.OnSwiped -= TryMove;
-            _clickHandler.OnClicked -= TryMoveByClick;
-            _wasdHandler.OnPressed -= TryMove;
+            UnsubscribeInput();
             TimeTracker.Instance.StopTimer();
+            
             _winParticle.Play();
             var duration = _winParticle.main.duration;
             yield return new WaitForSeconds(duration);
             OnMazePassed?.Invoke();
+        }
+        private void UnsubscribeInput()
+        {
+            if (_swipeHandler != null)
+                _swipeHandler.OnSwiped -= TryMove;
+
+            if (_clickHandler != null)
+                _clickHandler.OnClicked -= TryMoveByClick;
+
+            if (_wasdHandler != null)
+                _wasdHandler.OnPressed -= TryMove;
         }
     }
 }

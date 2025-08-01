@@ -14,11 +14,9 @@ namespace UI.Variables
             StepCounter.OnAddedSteps += UpdateStepsCount;
         }
 
-        public override void Show()
+        private void Update()
         {
-            base.Show();
             UpdateTime(TimeTracker.Instance.ElapsedTime);
-            UpdateStepsCount(StepCounter.CurrentSteps);
         }
 
         private void OnDestroy()
@@ -26,9 +24,11 @@ namespace UI.Variables
             StepCounter.OnAddedSteps -= UpdateStepsCount;
         }
 
-        private void Update()
+        public override void Show()
         {
+            base.Show();
             UpdateTime(TimeTracker.Instance.ElapsedTime);
+            UpdateStepsCount(StepCounter.CurrentSteps);
         }
 
         private void UpdateStepsCount(int stepsCount)

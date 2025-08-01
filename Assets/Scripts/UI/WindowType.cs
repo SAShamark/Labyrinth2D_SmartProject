@@ -2,7 +2,7 @@ namespace UI
 {
     public enum WindowType
     {
-        MainMenu,
-        Gameplay,
+        MainMenu = 0,
+        Gameplay = 1,
     }
 }
