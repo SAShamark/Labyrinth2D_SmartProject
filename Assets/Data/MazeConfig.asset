@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6ce5268ca24bcfbfd56359396aaf19, type: 3}
+  m_Name: MazeConfig
+  m_EditorClassIdentifier: 
+  _groundTile: {fileID: 11400000, guid: ff9e40101f47a894b855372c805aec06, type: 2}
+  _wallTile: {fileID: 11400000, guid: 4c7eb26c0db65fa448ac7c46532335dd, type: 2}
+  _exitTile: {fileID: 11400000, guid: a73c469155a9e7346939de4dcdd023e0, type: 2}
+  _mazeWidth: 21
+  _mazeHeight: 21
+  _numberOfExits: 4
+  _tileOffset: 15
+  _complexity: 0.75
+  _isRandomSeed: 1
+  _seed: 77777
