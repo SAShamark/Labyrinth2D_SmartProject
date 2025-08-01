@@ -70,7 +70,7 @@ namespace UI.Variables
             mazeData.Seed = seed;
             
             mazeData.NumberOfExits = (int)_exitsSlider.value;
-            mazeData.Complexity = _exitsSlider.value;
+            mazeData.Complexity = _complexitySlider.value;
             mazeData.IsRandomSeed = _randomSeedToggle.isOn;
 
             _mazeDataService.SaveMazeData();
